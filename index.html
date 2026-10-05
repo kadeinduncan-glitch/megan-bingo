@@ -29,6 +29,11 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(2rem,8vw,3rem);lin
 .btn{font:700 1rem var(--body);padding:10px 16px;border-radius:8px;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
 .btn.primary{background:var(--ink);color:var(--bg)}
 .how{color:var(--muted);font-size:.9rem;margin:0}
+.rules{display:flex;flex-direction:column;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.rules h2{font-family:var(--display);font-weight:800;font-size:1.15rem;margin:0}
+.rules ol,.rules ul{margin:0;padding-left:1.25rem;display:flex;flex-direction:column;gap:6px}
+.rules p{margin:0}
+.rules .tip{color:var(--muted);font-size:.9rem}
 </style>
 </head><body>
 <main>
@@ -36,6 +41,24 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(2rem,8vw,3rem);lin
     <h1>Megan's Baby Bingo</h1>
     <p class="sub">Send her off on leave right. Tap a square when you spot it at the send-off. First to get five in a row, across, down or diagonal, calls it out.</p>
   </header>
+  <section class="rules" aria-label="Instructions and rules">
+    <h2>How to play</h2>
+    <ol>
+      <li>Your card is shuffled just for you. The center square is free and already marked.</li>
+      <li>Watch and listen during Megan's send-off.</li>
+      <li>When you see or hear something on your card, tap that square. It turns yellow.</li>
+      <li>Mark five squares in a row (across, down or diagonal) and shout "Bingo!" so the room hears you.</li>
+    </ol>
+    <h2>Rules</h2>
+    <ul>
+      <li>Only mark a square after you see or hear it happen yourself.</li>
+      <li>Marked a square by mistake? Tap it again to unmark it.</li>
+      <li>First person to call Bingo wins. The host checks your card before the prize is handed over.</li>
+      <li>If two people call Bingo at the same moment, settle it with rock, paper, scissors.</li>
+      <li>No peeking at other people's cards, and keep it kind. This is a party for Megan.</li>
+    </ul>
+    <p class="tip">Tap "Deal me a new card" for a fresh shuffle, or "Clear marks" to start the same card over.</p>
+  </section>
   <div class="status"><span id="state">Marked: 0 of 24</span><span class="count" id="lines">Lines: 0</span></div>
   <div id="banner" class="banner" hidden>BINGO! Say it out loud and claim the cake.</div>
   <div class="grid" id="grid" role="group" aria-label="Bingo card"></div>
