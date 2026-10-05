@@ -43,24 +43,26 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(2rem,8vw,3rem);lin
   </header>
   <section class="rules" aria-label="Instructions and rules">
     <h2>How to play</h2>
+    <p>This game is played online, live, during Megan's virtual send-off. <strong>Players</strong> are the coworkers on the call. The <strong>host</strong> is whoever is running the send-off.</p>
     <ol>
-      <li>Your card is shuffled just for you. The center square is free and already marked.</li>
-      <li>Watch and listen during Megan's send-off.</li>
-      <li>When you see or hear something on your card, tap that square. It turns yellow.</li>
-      <li>Mark five squares in a row (across, down or diagonal) and shout "Bingo!" so the room hears you.</li>
+      <li><strong>Each player:</strong> open this page on your own phone or laptop. No sign-in needed. You get your own shuffled card. Do not refresh the page, or your card reshuffles and your marks are lost.</li>
+      <li><strong>Each player:</strong> when you see or hear something on your card happen during the send-off, tap that square. It turns yellow. The center square is free and already marked.</li>
+      <li><strong>Each player:</strong> when you have five yellow squares in a row (across, down or diagonal), the row gets an outline and a Bingo banner appears. Type "BINGO" in the group chat and post a screenshot of your card.</li>
+      <li><strong>Host:</strong> check the screenshot. All five squares in the row must be yellow (or the free center), and each one must have really happened on the call.</li>
+      <li><strong>Host:</strong> if the row checks out, announce the winner in the chat and arrange the prize. If it does not, tell the player in the chat, and the game goes on.</li>
     </ol>
     <h2>Rules</h2>
     <ul>
       <li>Only mark a square after you see or hear it happen yourself.</li>
       <li>Marked a square by mistake? Tap it again to unmark it.</li>
-      <li>First person to call Bingo wins. The host checks your card before the prize is handed over.</li>
-      <li>If two people call Bingo at the same moment, settle it with rock, paper, scissors.</li>
-      <li>No peeking at other people's cards, and keep it kind. This is a party for Megan.</li>
+      <li>First confirmed Bingo wins. If two players post at nearly the same time, the earlier message in the chat wins.</li>
+      <li>Your card lives only on your own screen. Nobody else can see it, so the screenshot is your proof.</li>
+      <li>Keep it kind. This is a party for Megan.</li>
     </ul>
-    <p class="tip">Tap "Deal me a new card" for a fresh shuffle, or "Clear marks" to start the same card over.</p>
+    <p class="tip">"Deal me a new card" gives you a fresh shuffle. "Clear marks" keeps your card and removes your marks.</p>
   </section>
   <div class="status"><span id="state">Marked: 0 of 24</span><span class="count" id="lines">Lines: 0</span></div>
-  <div id="banner" class="banner" hidden>BINGO! Say it out loud and claim the cake.</div>
+  <div id="banner" class="banner" hidden>BINGO! Post it in the group chat with a screenshot of your card.</div>
   <div class="grid" id="grid" role="group" aria-label="Bingo card"></div>
   <div class="row">
     <button class="btn primary" id="new" type="button">Deal me a new card</button>
