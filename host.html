@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Host Desk: Megan's Baby Bingo</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+body{margin:0}
+:root{
+  --bg:#eef6f3; --surface:#ffffff; --ink:#173a38; --muted:#5a7773; --line:#cfe1dc;
+  --accent:#e8664a; --accent-ink:#ffffff; --ok:#1f7a4d; --ok-bg:#d9f0e3; --bad:#b3341d; --bad-bg:#fbe0da; --mark:#ffe08a; --mark-ink:#4a3600;
+  --display:"Bricolage Grotesque","Trebuchet MS",sans-serif; --body:"DM Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f2321; --surface:#183230; --ink:#e6f2ef; --muted:#93b3ad; --line:#2a4a46;
+  --accent:#ff8a6e; --accent-ink:#2a0d05; --ok:#7fe0aa; --ok-bg:#1b4a35; --bad:#ff9a85; --bad-bg:#5a2318; --mark:#f2c94c; --mark-ink:#2b2000; color-scheme:dark}}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;padding-inline:16px;padding-block:24px}
+main{max-width:720px;margin-inline:auto;display:flex;flex-direction:column;gap:20px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(2rem,8vw,2.8rem);line-height:1;margin:0;text-wrap:balance}
+h2{font-family:var(--display);font-weight:800;font-size:1.25rem;margin:0}
+p{margin:0}
+.sub,.muted{color:var(--muted)}
+.sub{max-width:56ch}
+section{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px}
+ol,ul{margin:0;padding-left:1.25rem;display:flex;flex-direction:column;gap:6px}
+.btn{font:700 .95rem var(--body);padding:9px 14px;border-radius:8px;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--ink);color:var(--bg)}
+.btn:focus-visible,.ev:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.msg{display:flex;flex-direction:column;gap:8px;border:1px solid var(--line);border-radius:8px;padding:12px}
+.msg pre{margin:0;white-space:pre-wrap;word-break:break-word;font:400 .95rem/1.4 var(--body)}
+.msg .label{font-weight:700}
+.evgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+.ev{min-width:0;text-align:left;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:10px;font:500 .9rem/1.25 var(--body);cursor:pointer;display:flex;flex-direction:column;gap:4px}
+.ev .t{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.ev[aria-pressed="true"]{background:var(--mark);color:var(--mark-ink);border-color:var(--mark);font-weight:700}
+.ev[aria-pressed="true"] .t{color:var(--mark-ink)}
+.ev.sel{outline:3px solid var(--accent);outline-offset:-3px}
+.verdict{border-radius:8px;padding:12px 14px;font-weight:700}
+.verdict.ok{background:var(--ok-bg);color:var(--ok)}
+.verdict.bad{background:var(--bad-bg);color:var(--bad)}
+.verdict.idle{background:var(--bg);color:var(--muted);font-weight:500;border:1px dashed var(--line)}
+.chk{display:flex;gap:10px;align-items:flex-start}
+.chk input{margin-top:4px;width:18px;height:18px;flex:none}
+.count{font-variant-numeric:tabular-nums}
+</style>
+</head><body>
+<main>
+  <header>
+    <h1>Host Desk</h1>
+    <p class="sub">Host-only controls for Megan's Baby Bingo. Players do not need this page. Keep it open on a second screen or tab during the send-off.</p>
+  </header>
+
+  <section aria-labelledby="h-before">
+    <h2 id="h-before">1. Before the send-off</h2>
+    <label class="chk"><input type="checkbox" id="c1"><span>Decide the prize and who sends it (gift card, coffee, bragging rights).</span></label>
+    <label class="chk"><input type="checkbox" id="c2"><span>Post the player link in the group chat (message below).</span></label>
+    <label class="chk"><input type="checkbox" id="c3"><span>Remind players to open it on their own device and not refresh.</span></label>
+    <label class="chk"><input type="checkbox" id="c4"><span>Tell players where to call Bingo: the group chat, with a screenshot of their card.</span></label>
+    <div class="msg">
+      <span class="label">Kickoff message to paste in the chat</span>
+      <pre id="m1">Megan's Baby Bingo starts now! Open https://kadeinduncan-glitch.github.io/megan-bingo/ on your own phone or laptop. Do not refresh the page or your card reshuffles. Tap a square when you see or hear it happen during the send-off. When you get five in a row, type BINGO here and post a screenshot of your card. I will check it and announce the winner.</pre>
+      <div class="row"><button class="btn primary" type="button" data-copy="m1">Copy message</button><span class="muted" data-status></span></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-during">
+    <h2 id="h-during">2. During: log what actually happens</h2>
+    <p class="muted">Tap an item the moment it happens on the call. It turns yellow and gets a time stamp. This is your proof when someone calls Bingo. Tap again to undo.</p>
+    <div class="row"><span class="count" id="logcount">Happened: 0 of 25</span><button class="btn" type="button" id="resetlog">Clear the log</button></div>
+    <div class="evgrid" id="evgrid"></div>
+  </section>
+
+  <section aria-labelledby="h-verify">
+    <h2 id="h-verify">3. When someone calls Bingo</h2>
+    <ol>
+      <li>Ask them to post a screenshot of their card in the chat.</li>
+      <li>On their screenshot, find the five yellow squares in the row they are claiming. Check the row is straight: across, down or diagonal. The center "Megan's last day" square is free.</li>
+      <li>Below, tap those squares (four if they used the free center, five otherwise). The check tells you whether each one is in your log.</li>
+    </ol>
+    <div class="evgrid" id="vgrid"></div>
+    <div class="row"><span class="count" id="selcount">Selected: 0</span><button class="btn" type="button" id="clearsel">Clear selection</button></div>
+    <div class="verdict idle" id="verdict" role="status">Select the squares from the caller's row to check them.</div>
+  </section>
+
+  <section aria-labelledby="h-say">
+    <h2 id="h-say">4. Announcements to paste</h2>
+    <div class="msg">
+      <span class="label">Bingo confirmed</span>
+      <pre id="m2">BINGO confirmed! Congratulations, NAME. Every square in your row happened. Game over. Prize details coming your way.</pre>
+      <div class="row"><button class="btn primary" type="button" data-copy="m2">Copy message</button><span class="muted" data-status></span></div>
+    </div>
+    <div class="msg">
+      <span class="label">Bingo not confirmed</span>
+      <pre id="m3">Thanks for the call, NAME. One or more of those squares has not happened yet, so we are playing on. Keep your card open!</pre>
+      <div class="row"><button class="btn primary" type="button" data-copy="m3">Copy message</button><span class="muted" data-status></span></div>
+    </div>
+    <div class="msg">
+      <span class="label">Two calls at once</span>
+      <pre id="m4">Two Bingos came in close together. The earlier chat message wins, so congratulations to NAME.</pre>
+      <div class="row"><button class="btn primary" type="button" data-copy="m4">Copy message</button><span class="muted" data-status></span></div>
+    </div>
+    <p class="muted">Replace NAME with the player's name before you send.</p>
+  </section>
+</main>
+<script>
+var ITEMS=["Someone says \"she's glowing\"","A onesie gets unwrapped","Group photo is taken","Baby name debate","Diaper joke","Happy tears","Advice nobody asked for","\"Sleep while you can\"","Cake or cupcakes","Baby size compared to a fruit","Megan says \"I'm fine\"","Handoff doc mentioned","Out-of-office draft joke","Due date asked again","Baby monitor joke","Card signed by everyone","\"You'll be a great mom\"","Coffee run","Tiny socks","\"Who covers your inbox?\"","Stroller talk","Throwback baby photo","\"Time flies\"","Toast to Megan","Someone mentions parking spots"];
+var log={},sel={},KEY="megan-bingo-host-log";
+function load(){try{var s=localStorage.getItem(KEY);if(s)log=JSON.parse(s)||{}}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(log))}catch(e){}}
+function clock(){var d=new Date();var h=d.getHours()%12||12;var m=("0"+d.getMinutes()).slice(-2);return h+":"+m+(d.getHours()<12?" AM":" PM")}
+function mk(grid,onTap,pressedFn,selFn,timeFn){grid.innerHTML="";ITEMS.forEach(function(t,i){
+  var b=document.createElement("button");b.type="button";b.className="ev"+(selFn&&selFn(i)?" sel":"");
+  b.setAttribute("aria-pressed",pressedFn(i)?"true":"false");
+  var s=document.createElement("span");s.textContent=t;b.appendChild(s);
+  var tm=document.createElement("span");tm.className="t";tm.textContent=timeFn(i);b.appendChild(tm);
+  b.onclick=function(){onTap(i)};grid.appendChild(b)})}
+function render(){
+  var n=0;Object.keys(log).forEach(function(k){if(log[k])n++});
+  document.getElementById("logcount").textContent="Happened: "+n+" of 25";
+  mk(document.getElementById("evgrid"),function(i){if(log[i])delete log[i];else log[i]=clock();save();render()},
+    function(i){return !!log[i]},null,function(i){return log[i]?"Happened at "+log[i]:"Not yet"});
+  mk(document.getElementById("vgrid"),function(i){if(sel[i])delete sel[i];else sel[i]=true;render()},
+    function(i){return !!log[i]},function(i){return !!sel[i]},function(i){return sel[i]?(log[i]?"Selected, logged at "+log[i]:"Selected, NOT in your log"):(log[i]?"In your log":"Not in your log")});
+  var keys=Object.keys(sel);
+  document.getElementById("selcount").textContent="Selected: "+keys.length;
+  var v=document.getElementById("verdict");
+  if(keys.length===0){v.className="verdict idle";v.textContent="Select the squares from the caller's row to check them."}
+  else{
+    var missing=keys.filter(function(k){return !log[k]}).map(function(k){return ITEMS[k]});
+    if(keys.length<4){v.className="verdict idle";v.textContent="A row needs at least 4 squares plus the free center. Keep selecting."}
+    else if(keys.length>5){v.className="verdict bad";v.textContent="More than 5 squares selected. A row is 5 squares, or 4 plus the free center."}
+    else if(missing.length===0){v.className="verdict ok";v.textContent="All "+keys.length+" selected squares are in your log. If the row is straight and the center is free or logged, confirm the Bingo."}
+    else{v.className="verdict bad";v.textContent="Not confirmed. Not in your log yet: "+missing.join("; ")+"."}}
+}
+document.getElementById("resetlog").onclick=function(){log={};save();render()};
+document.getElementById("clearsel").onclick=function(){sel={};render()};
+Array.prototype.forEach.call(document.querySelectorAll("[data-copy]"),function(btn){
+  btn.onclick=function(){
+    var pre=document.getElementById(btn.getAttribute("data-copy"));var st=btn.parentNode.querySelector("[data-status]");
+    function fallback(){var r=document.createRange();r.selectNodeContents(pre);var s=window.getSelection();s.removeAllRanges();s.addRange(r);st.textContent="Text selected. Press copy on your keyboard."}
+    try{navigator.clipboard.writeText(pre.textContent).then(function(){st.textContent="Copied."},fallback)}catch(e){fallback()}}});
+Array.prototype.forEach.call(document.querySelectorAll('input[type=checkbox]'),function(c){
+  try{c.checked=localStorage.getItem(KEY+c.id)==="1"}catch(e){}
+  c.onchange=function(){try{localStorage.setItem(KEY+c.id,c.checked?"1":"0")}catch(e){}}});
+load();render();
+</script>
+</body></html>
