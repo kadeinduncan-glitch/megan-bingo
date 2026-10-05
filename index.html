@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Megan's Baby Bingo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+body{margin:0}
+:root{
+  --bg:#eef6f3; --surface:#ffffff; --ink:#173a38; --muted:#5a7773; --line:#cfe1dc;
+  --accent:#e8664a; --accent-ink:#ffffff; --mark:#ffe08a; --mark-ink:#4a3600; --free:#173a38; --free-ink:#eef6f3;
+  --display:"Bricolage Grotesque","Trebuchet MS",sans-serif; --body:"DM Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f2321; --surface:#183230; --ink:#e6f2ef; --muted:#93b3ad; --line:#2a4a46;
+  --accent:#ff8a6e; --accent-ink:#2a0d05; --mark:#f2c94c; --mark-ink:#2b2000; --free:#e6f2ef; --free-ink:#0f2321; color-scheme:dark}}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;padding-inline:16px;padding-block:24px}
+main{max-width:620px;margin-inline:auto;display:flex;flex-direction:column;gap:16px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(2rem,8vw,3rem);line-height:1;margin:0;text-wrap:balance}
+.sub{margin:0;color:var(--muted);max-width:52ch}
+.status{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-weight:700}
+.count{font-variant-numeric:tabular-nums;color:var(--muted);font-weight:500}
+.banner{background:var(--accent);color:var(--accent-ink);border-radius:10px;padding:14px 16px;font-family:var(--display);font-weight:800;font-size:1.25rem}
+.grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.sq{aspect-ratio:1;min-width:0;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:4px;font:500 clamp(.62rem,2.6vw,.85rem)/1.2 var(--body);display:flex;align-items:center;justify-content:center;text-align:center;overflow-wrap:anywhere;cursor:pointer}
+.sq:focus-visible,.btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sq[aria-pressed="true"]{background:var(--mark);color:var(--mark-ink);border-color:var(--mark);font-weight:700}
+.sq.free{background:var(--free);color:var(--free-ink);border-color:var(--free);font-family:var(--display);font-weight:800;cursor:default}
+.sq.win{outline:3px solid var(--accent);outline-offset:-3px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font:700 1rem var(--body);padding:10px 16px;border-radius:8px;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--ink);color:var(--bg)}
+.how{color:var(--muted);font-size:.9rem;margin:0}
+</style>
+</head><body>
+<main>
+  <header>
+    <h1>Megan's Baby Bingo</h1>
+    <p class="sub">Send her off on leave right. Tap a square when you spot it at the send-off. First to get five in a row, across, down or diagonal, calls it out.</p>
+  </header>
+  <div class="status"><span id="state">Marked: 0 of 24</span><span class="count" id="lines">Lines: 0</span></div>
+  <div id="banner" class="banner" hidden>BINGO! Say it out loud and claim the cake.</div>
+  <div class="grid" id="grid" role="group" aria-label="Bingo card"></div>
+  <div class="row">
+    <button class="btn primary" id="new" type="button">Deal me a new card</button>
+    <button class="btn" id="clear" type="button">Clear marks</button>
+  </div>
+  <p class="how">Every card is shuffled, so no two coworkers have the same board.</p>
+</main>
+<script>
+var ITEMS=["Someone says \"she's glowing\"","A onesie gets unwrapped","Group photo is taken","Baby name debate","Diaper joke","Happy tears","Advice nobody asked for","\"Sleep while you can\"","Cake or cupcakes","Baby size compared to a fruit","Megan says \"I'm fine\"","Handoff doc mentioned","Out-of-office draft joke","Due date asked again","Baby monitor joke","Card signed by everyone","\"You'll be a great mom\"","Coffee run","Tiny socks","\"Who covers your inbox?\"","Stroller talk","Throwback baby photo","\"Time flies\"","Toast to Megan","Someone mentions parking spots"];
+var grid=document.getElementById("grid"),card=[],marked={};
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function deal(){card=shuffle(ITEMS).slice(0,24);card.splice(12,0,"FREE");marked={12:true};render()}
+function lines(){var L=[],r,c;for(r=0;r<5;r++){L.push([0,1,2,3,4].map(function(c){return r*5+c}))}
+ for(c=0;c<5;c++){L.push([0,1,2,3,4].map(function(r){return r*5+c}))}
+ L.push([0,6,12,18,24]);L.push([4,8,12,16,20]);return L}
+function render(){
+ var win={},n=0,count=0,Ls=lines();
+ Ls.forEach(function(l){if(l.every(function(i){return marked[i]})){count++;l.forEach(function(i){win[i]=1})}});
+ grid.innerHTML="";
+ card.forEach(function(t,i){
+  var b=document.createElement("button");b.type="button";b.className="sq"+(t==="FREE"?" free":"")+(win[i]?" win":"");
+  b.textContent=t==="FREE"?"Megan's last day":t;
+  if(t!=="FREE"){b.setAttribute("aria-pressed",marked[i]?"true":"false");if(marked[i])n++;b.onclick=function(){marked[i]=!marked[i];render()}}
+  else b.setAttribute("aria-pressed","true");
+  grid.appendChild(b)});
+ document.getElementById("state").textContent="Marked: "+n+" of 24";
+ document.getElementById("lines").textContent="Lines: "+count;
+ document.getElementById("banner").hidden=count===0}
+document.getElementById("new").onclick=deal;
+document.getElementById("clear").onclick=function(){marked={12:true};render()};
+deal();
+</script>
+</body></html>
