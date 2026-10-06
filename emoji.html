@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Megan's Emoji Decoder</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+:root{--bg:#eef6f3;--surface:#fff;--ink:#173a38;--muted:#5a7773;--line:#cfe1dc;--accent:#e8664a;--accent-ink:#fff;--ok:#2f8f5b;--bad:#c8402f;--display:"Bricolage Grotesque","Trebuchet MS",sans-serif;--body:"DM Sans",system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#0f2321;--surface:#183230;--ink:#e6f2ef;--muted:#93b3ad;--line:#2a4a46;--accent:#ff8a6e;--accent-ink:#2a0d05;--ok:#5fd39a;--bad:#ff8a78;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;padding:24px 16px}
+main{max-width:560px;margin-inline:auto;display:flex;flex-direction:column;gap:16px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(2rem,8vw,2.8rem);line-height:1;margin:0;text-wrap:balance}
+p{margin:0}.muted{color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.emoji{font-size:clamp(2.6rem,14vw,4rem);text-align:center;letter-spacing:.1em;line-height:1.2}
+.opts{display:grid;gap:8px}
+.opt,.btn{font:700 1rem var(--body);padding:12px 14px;border-radius:8px;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;text-align:left}
+.btn{text-align:center;background:var(--ink);color:var(--bg)}
+.opt:focus-visible,.btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.opt.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.bad{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt:disabled{cursor:default}
+.top{display:flex;justify-content:space-between;font-weight:700}
+.score{font-family:var(--display);font-weight:800;font-size:2.4rem}
+.rules{border-top:1px solid var(--line);padding-top:12px;font-size:.92rem;color:var(--muted)}
+.rules ul{margin:6px 0 0;padding-left:20px}
+</style></head><body>
+<main>
+<header><h1>Megan's Emoji Decoder</h1>
+<p class="muted">Ten emoji puzzles, baby and leave edition. Pick the phrase that fits. Play on your own, then post your score in the group chat.</p></header>
+<div id="app"></div>
+<section class="rules"><strong>How to play</strong>
+<ul><li>Everyone plays on their own screen. No sign-in needed.</li>
+<li>Tap an answer. It locks in and shows if you were right.</li>
+<li>Tap Next. After 10 puzzles you get your score.</li>
+<li>Post your score in the group chat. Highest score wins. Ties go to the earlier post.</li>
+<li>Kadein is the host and settles any dispute.</li></ul></section>
+</main>
+<script>
+var P=[["👶🍼🌙","Midnight feeding",["Baby shower","Nap time","Car seat"]],
+["🧸🎁🎈","Baby shower",["Birthday party","Midnight feeding","Stroller walk"]],
+["🚗👶💺","Car seat",["Road trip","Baby monitor","Sleep schedule"]],
+["📧🚫🏝️","Out of office",["Inbox zero","Team lunch","Reply all"]],
+["🦢📦👶","Stork delivery",["Swan lake","Package pickup","Due date"]],
+["😴❌🌙","Sleepless nights",["Early bird","Power nap","Bedtime story"]],
+["👶💩🔄","Diaper change",["Tummy time","Burp cloth","Bath time"]],
+["🎂🕯️1️⃣","First birthday",["Baby shower","Cake smash","Retirement party"]],
+["📋🤝📂","Handoff doc",["Group photo","Status meeting","Team survey"]],
+["🎵👶😴","Lullaby",["Karaoke night","Baby shark","Dance party"]]];
+var app=document.getElementById("app"),i,score,order;
+function sh(a){a=a.slice();for(var k=a.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1)),t=a[k];a[k]=a[j];a[j]=t}return a}
+function start(){i=0;score=0;order=sh(P);show()}
+function show(){
+ if(i>=order.length){return done()}
+ var q=order[i],opts=sh([q[1]].concat(q[2])),locked=false;
+ app.innerHTML="";
+ var c=document.createElement("div");c.className="card";
+ c.innerHTML='<div class="top"><span>Puzzle '+(i+1)+' of '+order.length+'</span><span>Score: '+score+'</span></div><div class="emoji" aria-label="Emoji puzzle">'+q[0]+'</div><div class="opts"></div><div id="next"></div>';
+ var box=c.querySelector(".opts");
+ opts.forEach(function(o){var b=document.createElement("button");b.type="button";b.className="opt";b.textContent=o;
+  b.onclick=function(){if(locked)return;locked=true;
+   var all=box.querySelectorAll(".opt");
+   all.forEach(function(x){x.disabled=true;if(x.textContent===q[1])x.classList.add("ok")});
+   if(o===q[1]){score++}else{b.classList.add("bad")}
+   var n=document.createElement("button");n.type="button";n.className="btn";n.style.width="100%";
+   n.textContent=i===order.length-1?"See my score":"Next puzzle";
+   n.onclick=function(){i++;show()};
+   c.querySelector("#next").appendChild(n);n.focus()};
+  box.appendChild(b)});
+ app.appendChild(c)}
+function done(){
+ var m=score>=9?"Decoder champion.":score>=7?"Baby expert.":score>=4?"Solid effort.":"Time to read the parenting books.";
+ app.innerHTML='<div class="card"><p class="muted">Your score</p><p class="score">'+score+' / '+order.length+'</p><p>'+m+' Post your score in the group chat.</p><button class="btn" id="again" type="button">Play again</button></div>';
+ document.getElementById("again").onclick=start}
+start();
+</script>
+</body></html>
